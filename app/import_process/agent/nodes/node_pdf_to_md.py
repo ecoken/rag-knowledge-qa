@@ -188,17 +188,26 @@ def step_3_download_and_extract(zip_url, local_dir_obj, stem) -> str:
     :return: 返回md文件的地址
     """
     # 1. 下载zip文件 response响应体
-    response = requests.get(zip_url)
+    # 注意：和step_2上传时同理，必须禁用代理！
+    # zip包存放在CDN(cdn-mineru.openxlab.org.cn)上，走本机代理会导致TLS握手被掐断，
+    # 报SSLError: UNEXPECTED_EOF_WHILE_READING。trust_env=False让requests忽略
+    # 环境变量和系统设置里的代理，直连CDN。
+    http_session = requests.Session()
+    http_session.trust_env = False
+    try:
+        response = http_session.get(zip_url, timeout=(10, 300))
 
-    if response.status_code != 200:
-        logger.error(f"[step_3_download_and_extract]下载文件失败，请检查输入文件路径是否正确！！")
-        raise RuntimeError(f"[step_3_download_and_extract]下载文件失败，请检查输入文件路径是否正确！！")
-    # 2. 将响应体的zip文件保存到本地
-    # 保存文件  output/ 二狗子 / 二狗子_result.zip
-    zip_save_path = local_dir_obj / f"{stem}_result.zip"
-    with open(zip_save_path, 'wb') as f:
-        # response.content 响应体中的数据
-        f.write(response.content)
+        if response.status_code != 200:
+            logger.error(f"[step_3_download_and_extract]下载文件失败，返回的状态码：{response.status_code}！！")
+            raise RuntimeError(f"[step_3_download_and_extract]下载文件失败，返回的状态码：{response.status_code}！！")
+        # 2. 将响应体的zip文件保存到本地
+        # 保存文件  output/ 二狗子 / 二狗子_result.zip
+        zip_save_path = local_dir_obj / f"{stem}_result.zip"
+        with open(zip_save_path, 'wb') as f:
+            # response.content 响应体中的数据
+            f.write(response.content)
+    finally:
+        http_session.close()
     logger.info(f"[step_3_download_and_extract]下载文件成功，保存位置：{zip_save_path}")
 
     # 3. 清空下旧目录（将上一次处理的文件目录进行删除）

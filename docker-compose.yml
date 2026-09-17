@@ -1,0 +1,80 @@
+# ============================================================
+# 本地开发环境 —— 知识库项目依赖的基础服务
+#
+# 用法：
+#   docker compose up -d minio      只启动 MinIO（推荐，先跑通当前这一步）
+#   docker compose up -d            启动本文件里所有服务
+#   docker compose ps               查看运行状态
+#   docker compose logs -f minio    看某个服务的日志
+#   docker compose down             停止并删除容器（数据保留在 volumes 里）
+#   docker compose down -v          连数据一起删（慎用）
+# ============================================================
+
+services:
+
+  # ---------- MinIO：对象存储，存放 PDF 解析出来的图片 ----------
+  minio:
+    # image: 用哪个镜像。冒号后面是版本号（tag）。
+    #   生产环境务必锁定具体版本，不要用 latest —— 否则某天重新拉取
+    #   会静默升级到新版本，可能不兼容。
+    #
+    #   注意这里用的是 quay.io 而不是默认的 Docker Hub：
+    #   Docker Hub 上的 minio/minio 仓库拉取会被拒（access denied），
+    #   quay.io 是 MinIO 官方同步发布的另一个源，可以正常拉取。
+    #   不写域名时 Docker 默认去 Docker Hub 找，所以必须带上 quay.io/ 前缀。
+    image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
+
+    # container_name: 容器的名字。不写的话 Docker 会生成
+    #   "项目名-服务名-1" 这种，指定一下方便 docker logs minio 直接用。
+    container_name: minio
+
+    # ports: 端口映射，格式是 "宿主机端口:容器内端口"
+    #   9000 是 API 端口，代码里连的就是这个
+    #   9001 是网页管理台，浏览器开 http://localhost:9001
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+    # environment: 传给容器的环境变量，这里是设置初始账号密码
+    #   取值来自项目 .env 里的 MINIO_ACCESS_KEY / MINIO_SECRET_KEY，
+    #   docker compose 会自动读取同目录下的 .env，两边天然保持一致。
+    #   冒号后的默认值仅为兜底，正式使用请在 .env 中改成强密码——
+    #   minioadmin/minioadmin 是 MinIO 公开的出厂默认值，等同于没有密码。
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+
+    # volumes: 数据持久化，格式是 "宿主机路径:容器内路径"
+    #   ★ 这是最容易被忽略、也最致命的一项 ★
+    #   不写的话，容器里的文件只存在于容器的可写层，
+    #   docker compose down 之后数据全部消失。
+    #   写了之后，文件实际落在 D:/docker_data/minio，容器删了重建也还在。
+    volumes:
+      - D:/docker_data/minio:/data
+
+    # command: 覆盖镜像的默认启动命令
+    #   server /data       把 /data 目录作为存储根
+    #   --console-address  指定管理台端口
+    command: server /data --console-address ":9001"
+
+    # restart: 重启策略
+    #   unless-stopped = 开机自启、崩溃自动重启，但你手动 stop 之后就不管了
+    restart: unless-stopped
+
+    # healthcheck: 健康检查，让 Docker 知道服务是"真的能用了"
+    #   而不只是"进程起来了"。别的服务用 depends_on 等它时会看这个。
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# ============================================================
+# 后续要加 Milvus / MongoDB / Neo4j 时，在上面 services: 下面
+# 继续加同级的条目即可，结构完全一样。
+#
+# 注意 Milvus 不是单个服务，standalone 模式需要 etcd + MinIO + Milvus
+# 三个容器配合，直接去官方文档下载它提供的 compose 文件，
+# 把里面的 services 拷贝过来合并，不要自己从零写：
+#   https://milvus.io/docs/install_standalone-docker-compose.md
+# ============================================================
