@@ -1,0 +1,248 @@
+# 黄金评测集 —— 设备手册知识库问答
+#
+# 评分方式与 Text2SQL 类项目不同：问答没有唯一正确的字符串，
+# 所以不做全文比对，而是分两层打分：
+#
+#   1. 检索命中率：正确的章节是否进入了精排后的上下文。
+#      这一层单独看，能把「检索没找到」和「找到了但答错」区分开——
+#      两者的优化方向完全不同，混在一个总分里就看不出该改哪儿。
+#
+#   2. 答案关键事实覆盖率：答案中是否包含必须出现的关键信息。
+#      用关键词而非整句比对，是因为同一个事实有无数种表述方式，
+#      但「10」「32」这种具体数值是绕不开的。
+#
+# 字段说明：
+#   id                唯一编号
+#   level             难度层级 L1~L7
+#   question          用户提问
+#   focus             该题考察的能力点
+#   expect_sections   期望命中的章节标题，命中任意一个即算检索成功
+#   expect_keywords   答案中必须出现的关键事实，按命中比例计分
+#   forbid_keywords   答案中不应出现的内容，出现即判错（用于捕捉幻觉）
+#   expect_refusal    期望模型如实表示无法回答
+#
+# ⚠️ 当前语料仅包含 1 份手册（HAK 180 烫金机产品安全手册），
+#    因为只有这一份完成了 MinerU 解析入库。扩充语料后需同步扩充本评测集，
+#    尤其要补充跨手册的干扰题——那才是检验商品过滤是否生效的关键。
+
+# ------------------------------------------------- L1 直接事实查找
+- id: L1-01
+  level: L1
+  question: 这台设备的工作温度范围是多少
+  focus: 单一数值事实，检索与抽取都最直接
+  expect_sections: ["设备"]
+  expect_keywords: ["10", "32"]
+
+- id: L1-02
+  level: L1
+  question: 设备的工作湿度要求是什么
+  focus: 与温度同处一段，考察能否精确抽取而非整段照抄
+  expect_sections: ["设备"]
+  expect_keywords: ["20", "80"]
+
+- id: L1-03
+  level: L1
+  question: 这台机器用什么电压供电
+  focus: 电源规格
+  expect_sections: ["电源线"]
+  expect_keywords: ["220", "240"]
+
+- id: L1-04
+  level: L1
+  question: 设备型号是什么
+  focus: 文档主体识别是否正确
+  expect_sections: ["HAK 180 烫金机", "产品中有害物质的名称及含量"]
+  expect_keywords: ["HAK"]
+
+- id: L1-05
+  level: L1
+  question: 技术服务支持网站是哪个
+  focus: URL 类事实，稀疏向量的典型用武之地
+  expect_sections: ["HAK 180 烫金机"]
+  expect_keywords: ["95105369"]
+
+# ------------------------------------------------- L2 条件与禁止事项
+- id: L2-01
+  level: L2
+  question: 可以用延长线吗
+  focus: |
+    否定式提问。正确答案是「不建议」，最危险的失败是模型答成「可以」——
+    安全手册场景下方向答反比答不出来更糟。
+  expect_sections: ["电源线"]
+  expect_keywords: ["不", "延长线"]
+  forbid_keywords: ["可以使用延长线", "建议使用延长线"]
+
+- id: L2-02
+  level: L2
+  question: 能不能接直流电源
+  focus: 否定式提问 + 专业术语（逆变器）
+  expect_sections: ["电源线"]
+  expect_keywords: ["不", "直流"]
+
+- id: L2-03
+  level: L2
+  question: 打雷的时候能用这台机器吗
+  focus: 口语化的条件提问，手册原文用词是「雷暴天气」
+  expect_sections: ["电源线"]
+  expect_keywords: ["不", "雷"]
+
+- id: L2-04
+  level: L2
+  question: 卡纸了还能继续用吗
+  focus: 条件判断，需要说明原因（纸张接触定影单元可能起火）
+  expect_sections: ["设备"]
+  expect_keywords: ["不", "火"]
+
+- id: L2-05
+  level: L2
+  question: 这台设备可以自己拆开修吗
+  focus: 否定 + 后果说明（触电、保修失效）
+  expect_sections: ["设备"]
+  expect_keywords: ["不", "维修"]
+
+# ------------------------------------------------- L3 口语化提问
+- id: L3-01
+  level: L3
+  question: 机器该怎么擦
+  focus: |
+    极口语化。手册里对应的是「清洁本设备」段落，答案要点是干抹布、
+    禁用酒精和有机溶剂。考察语义检索能否跨越口语与术语的鸿沟。
+  expect_sections: ["设备"]
+  expect_keywords: ["干", "抹布"]
+
+- id: L3-02
+  level: L3
+  question: 搬这个机器要注意什么
+  focus: 口语提问，对应「为设备选择一个安全的位置」章节
+  expect_sections: ["为设备选择一个安全的位置"]
+  expect_keywords: ["双手"]
+
+- id: L3-03
+  level: L3
+  question: 机器放哪儿比较合适
+  focus: 口语提问，答案分散在多处（平整稳定、通风、靠近插座）
+  expect_sections: ["设备", "为设备选择一个安全的位置"]
+  expect_keywords: ["平整"]
+
+- id: L3-04
+  level: L3
+  question: 机器烫手正常吗，会不会烧到
+  focus: |
+    口语化的安全疑问。对应「使用后内部零件处于极热状态，
+    打开前盖时勿触摸灰色标记区域」。
+  expect_sections: ["设备"]
+  expect_keywords: ["烧伤", "冷却"]
+
+- id: L3-05
+  level: L3
+  question: 长期不用要做什么处理
+  focus: 对应「长时间不使用请拔掉电源线」
+  expect_sections: ["电源线"]
+  expect_keywords: ["拔"]
+
+# ------------------------------------------------- L4 需跨段落综合
+- id: L4-01
+  level: L4
+  question: 用这台机器有哪些触电风险，该怎么避免
+  focus: |
+    答案分散在多个段落：湿手触摸插头、设备内部高压电极、
+    雷暴天气、金属物体进入。考察多片段召回与整合能力。
+  expect_sections: ["电源线", "设备"]
+  expect_keywords: ["触电"]
+
+- id: L4-02
+  level: L4
+  question: 哪些情况下必须立即拔掉电源插头
+  focus: |
+    条件枚举题，答案分散在三处：设备异常高温冒烟、液体倒入、
+    金属或液体进入内部。
+  expect_sections: ["设备"]
+  expect_keywords: ["拔"]
+
+- id: L4-03
+  level: L4
+  question: 什么样的插座不能接
+  focus: 跨「警告」与「重要事项」两个层级的限制条件
+  expect_sections: ["电源线"]
+  expect_keywords: ["开关"]
+
+# ------------------------------------------------- L5 特殊人群与配件
+- id: L5-01
+  level: L5
+  question: 戴心脏起搏器的人用这个机器安全吗
+  focus: 特殊人群提示，手册原文是「本设备可能会产生弱磁场」
+  expect_sections: ["设备"]
+  expect_keywords: ["磁场"]
+
+- id: L5-02
+  level: L5
+  question: 可以用别的牌子的烫金膜盒吗
+  focus: 耗材兼容性，涉及保修条款
+  expect_sections: ["设备"]
+  expect_keywords: ["保修"]
+  forbid_keywords: ["可以使用其他品牌"]
+
+- id: L5-03
+  level: L5
+  question: 设备上的警告标签能撕掉吗
+  focus: 明确禁止事项
+  expect_sections: ["警告标签"]
+  expect_keywords: ["不"]
+
+- id: L5-04
+  level: L5
+  question: 包装用的塑料袋要怎么处理
+  focus: 窒息风险提示，容易被当成无关内容
+  expect_sections: ["设备"]
+  expect_keywords: ["儿童"]
+
+# ------------------------------------------------- L6 表格数据抽取
+- id: L6-01
+  level: L6
+  question: 这个产品里有哪些有害物质
+  focus: |
+    表格类问题。MinerU 把有害物质表解析成了 HTML table，
+    考察表格内容能否被正确切分、向量化并检索到。
+  expect_sections: ["产品中有害物质的名称及含量"]
+  expect_keywords: ["铅"]
+
+- id: L6-02
+  level: L6
+  question: 主电路板里的铅含量超标了吗
+  focus: |
+    需要读懂表格的行列对应关系（主电路板 × 铅 = ×，表示超出限量）。
+    这是表格类 RAG 里最难的一类问题。
+  expect_sections: ["产品中有害物质的名称及含量"]
+  expect_keywords: ["超"]
+
+# ------------------------------------------------- L7 边界与拒答
+# 这组题在手册中没有答案，考察系统是否如实告知而非编造。
+# 安全手册场景下编造答案的后果远比答不出来严重。
+- id: L7-01
+  level: L7
+  question: 这台机器的打印速度是每分钟多少页
+  focus: 安全手册不含性能参数，应如实告知无法回答
+  expect_refusal: true
+
+- id: L7-02
+  level: L7
+  question: 这台设备卖多少钱
+  focus: 手册不含价格信息
+  expect_refusal: true
+
+- id: L7-03
+  level: L7
+  question: 怎么连接 WiFi
+  focus: |
+    手册不含网络配置内容。容易被「连接」「设置」这类词误导到
+    电源连接相关段落，考察精排阈值是否起到了过滤作用。
+  expect_refusal: true
+
+- id: L7-04
+  level: L7
+  question: 保修期是几年
+  focus: |
+    手册提到了「保修」但只说保修责任与失效条件，从未给出期限。
+    这是最容易诱发幻觉的一类题——相关段落确实召回得到，
+    但里面并没有用户要的那个数字。
+  expect_refusal: true
