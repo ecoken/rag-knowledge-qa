@@ -45,7 +45,7 @@ REFUSAL_MARKERS = (
 
 
 # 千分位分隔的数字，如 336,000 或 1,234,567
-_THOUSAND_SEP = re.compile(r"(?<=\d),(?=\d{3})")
+_THOUSAND_SEP = re.compile(r"(?<=\d),(?=\d{3}(?!\d))")
 
 
 def normalize_numbers(text: str) -> str:
