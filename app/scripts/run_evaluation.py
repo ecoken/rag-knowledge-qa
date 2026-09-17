@@ -18,6 +18,7 @@
 import argparse
 import asyncio
 import json
+import re
 import statistics
 import time
 from datetime import datetime
@@ -41,6 +42,20 @@ REFUSAL_MARKERS = (
     "没有检索到", "无法作答", "未提及", "没有提到", "手册中未", "无相关",
     "抱歉", "不包含", "未找到", "没有找到", "无法回答",
 )
+
+
+# 千分位分隔的数字，如 336,000 或 1,234,567
+_THOUSAND_SEP = re.compile(r"(?<=\d),(?=\d{3})")
+
+
+def normalize_numbers(text: str) -> str:
+    """去掉数字中的千分位逗号，便于与评测集里的裸数字比对。
+
+    模型习惯把大数写成 336,000 以便阅读，而评测集里写的是 336000，
+    直接做子串匹配会把完全正确的答案判成错——这是测量工具的缺陷，
+    不修的话准确率会被系统性低估。
+    """
+    return _THOUSAND_SEP.sub("", text)
 
 
 def is_refusal(answer: str) -> bool:
@@ -68,10 +83,11 @@ def score_retrieval(chunks: list, expect_sections: list) -> Optional[bool]:
 
 def score_keywords(answer: str, expect: list, forbid: list) -> tuple[Optional[float], list]:
     """返回 (关键事实覆盖率, 命中的禁用词)。"""
-    violated = [k for k in (forbid or []) if k in answer]
+    normalized = normalize_numbers(answer)
+    violated = [k for k in (forbid or []) if k in answer or k in normalized]
     if not expect:
         return None, violated
-    hit = sum(1 for k in expect if k in answer)
+    hit = sum(1 for k in expect if k in answer or k in normalized)
     return hit / len(expect), violated
 
 
