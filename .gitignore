@@ -22,3 +22,6 @@ doc/
 # IDE 与本地工具配置
 .idea/
 .claude/settings.local.json
+
+# 评测自动生成的时间戳报告（结果已固化为 evaluation/optimized_*.json）
+evaluation/reports/

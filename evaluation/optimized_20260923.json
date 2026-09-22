@@ -1,0 +1,380 @@
+{
+  "summary": {
+    "generated_at": "2026-09-23T04:36:16",
+    "total": 25,
+    "passed": 24,
+    "accuracy_pct": 96.0,
+    "retrieval_hit_pct": 92.9,
+    "avg_keyword_coverage_pct": 97.5,
+    "refusal_accuracy_pct": 100.0,
+    "by_level": {
+      "L1": {
+        "total": 6,
+        "passed": 5,
+        "accuracy_pct": 83.3
+      },
+      "L2": {
+        "total": 3,
+        "passed": 3,
+        "accuracy_pct": 100.0
+      },
+      "L3": {
+        "total": 4,
+        "passed": 4,
+        "accuracy_pct": 100.0
+      },
+      "L4": {
+        "total": 4,
+        "passed": 4,
+        "accuracy_pct": 100.0
+      },
+      "L5": {
+        "total": 2,
+        "passed": 2,
+        "accuracy_pct": 100.0
+      },
+      "L6": {
+        "total": 2,
+        "passed": 2,
+        "accuracy_pct": 100.0
+      },
+      "L7": {
+        "total": 4,
+        "passed": 4,
+        "accuracy_pct": 100.0
+      }
+    },
+    "latency_ms": {
+      "p50": 50715,
+      "p95": 55310,
+      "mean": 47278
+    }
+  },
+  "records": [
+    {
+      "id": "L1-01",
+      "level": "L1",
+      "question": "Aolynk CC 系列集中器的缺省 IP 地址是多少",
+      "expect_refusal": false,
+      "answer": "Aolynk CC 系列集中器的缺省 IP 地址为 192.168.0.241。",
+      "retrieval_hit": true,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索命中）",
+      "latency_ms": 51623,
+      "chunk_count": 5
+    },
+    {
+      "id": "L1-02",
+      "level": "L1",
+      "question": "Aolynk CB304n 网桥的缺省 IP 地址是什么",
+      "expect_refusal": false,
+      "answer": "Aolynk CB304n 网桥的缺省 IP 地址为 192.168.1.1。",
+      "retrieval_hit": true,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索命中）",
+      "latency_ms": 6950,
+      "chunk_count": 5
+    },
+    {
+      "id": "L1-03",
+      "level": "L1",
+      "question": "H3C ER2100 路由器的 Web 登录用户名和密码是什么",
+      "expect_refusal": false,
+      "answer": "H3C ER2100 路由器的 Web 登录用户名和密码缺省均为 admin，区分大小写。",
+      "retrieval_hit": true,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索命中）",
+      "latency_ms": 48448,
+      "chunk_count": 5
+    },
+    {
+      "id": "L1-04",
+      "level": "L1",
+      "question": "NR-1200W 路由器怎么恢复缺省登录密码",
+      "expect_refusal": false,
+      "answer": "当由于误操作导致无法登录路由器时，可以通过执行 `admin acl default` 命令将用户IP地址范围恢复为缺省设置（缺省情况下，允许局域网内所有用户访问路由器），从而解决登录问题。该命令可在路由器的命令行界面中执行。\n\n【图片】\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/H3CNR-1200W企业级无线宽带路由器用户手册-5W100-整本手册/a11e72bdc6b911a1d7f1d1cc7789f031e0a46c90bf2447b374efbea77695edea.jpg",
+      "retrieval_hit": false,
+      "keyword_ratio": 0.5,
+      "passed": false,
+      "reason": "关键事实覆盖不足 50%，缺失：['Reset']",
+      "latency_ms": 51466,
+      "chunk_count": 5
+    },
+    {
+      "id": "L1-05",
+      "level": "L1",
+      "question": "CC600E 和 CC600E-AC60 有什么区别",
+      "expect_refusal": false,
+      "answer": "CC600E 和 CC600E-AC60 的主要区别在于供电电压不同：CC600E 使用 AC 220V 供电，而 CC600E-AC60 使用 AC 60V 供电。两者功能相同。",
+      "retrieval_hit": true,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索命中）",
+      "latency_ms": 51702,
+      "chunk_count": 5
+    },
+    {
+      "id": "L1-06",
+      "level": "L1",
+      "question": "HAK180 烫金机的工作温度范围是多少",
+      "expect_refusal": false,
+      "answer": "HAK180 烫金机的工作温度范围是 10 °C 到 32 °C。\n\n【图片】\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/hak180产品安全手册/f3349cded08d6686a93d0a81b9a64ec1e50d9a82cbb88541b37027f085813a15.jpg\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/hak180产品安全手册/501bb8d2d681e4502d87badb15a68939eadfa086d309c3599f1c36b0bc559177.jpg",
+      "retrieval_hit": true,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索命中）",
+      "latency_ms": 24012,
+      "chunk_count": 5
+    },
+    {
+      "id": "L2-01",
+      "level": "L2",
+      "question": "缺省的登录密码是什么",
+      "expect_refusal": false,
+      "answer": "缺省的登录密码是admin。",
+      "retrieval_hit": null,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索未命中期望章节）",
+      "latency_ms": 49702,
+      "chunk_count": 5
+    },
+    {
+      "id": "L2-02",
+      "level": "L2",
+      "question": "设备的缺省 IP 地址是多少",
+      "expect_refusal": false,
+      "answer": "根据参考内容，不同设备的缺省IP地址如下：\n\n- H3C ER2100企业级路由器、H3C ER214W路由器、H3C NR-1200W企业级无线宽带路由器的LAN口缺省IP地址均为：192.168.1.1，子网掩码为255.255.255.0。\n- Aolynk CB304n Cable网桥的缺省IP地址为：192.168.1.1，子网掩码为255.255.255.0。\n- Aolynk CC系列室内型Cable网络集中器的缺省IP地址为：192.168.0.241，子网掩码为255.255.255.0。\n\n【图片】\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/AolynkCB304nCable网桥用户手册-5W100-整本手册/d014956883c24f6ecec848cb3afc2436a92fe14324050370524b9c276fde084b.jpg\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/AolynkCB304nCable网桥",
+      "retrieval_hit": null,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索未命中期望章节）",
+      "latency_ms": 58921,
+      "chunk_count": 5
+    },
+    {
+      "id": "L2-03",
+      "level": "L2",
+      "question": "怎么恢复出厂设置",
+      "expect_refusal": false,
+      "answer": "要恢复出厂设置，请按照以下步骤操作：\n\n1. 登录路由器管理界面。\n2. 进入“设备管理” → “基本管理” → “配置管理”页面。\n3. 在配置管理页面中，找到“恢复出厂设置”或“复原”功能选项。\n4. 单击“复原”按钮（或“重置”按钮，具体名称根据设备型号略有差异），系统将弹出确认提示。\n5. 在确认提示框中选择“是”，完成恢复出厂设置操作。\n6. 设备将自动重启，恢复到出厂初始状态。\n\n注意：\n- 恢复出厂设置后，所有当前配置信息将丢失，请提前做好备份。\n- 请勿编辑本地备份的.cfg文件，因为该文件经过加密，修改后无法恢复到路由器中。\n- 恢复过程中请勿断开设备电源。\n\n【图片】\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/H3CMSR-XS系列路由器用户手册-R0821-6W100-整本手册/f82db673ffa057cb101c760c3b3de24fcdba7236b075a1eec2eecbe0ccbb0494.jpg\nhttp://127.0.0.1:9000/knowledge-base-fil",
+      "retrieval_hit": true,
+      "keyword_ratio": null,
+      "passed": true,
+      "reason": "通过",
+      "latency_ms": 50997,
+      "chunk_count": 5
+    },
+    {
+      "id": "L3-01",
+      "level": "L3",
+      "question": "ER2100 路由器网页打不开，登录地址是多少",
+      "expect_refusal": false,
+      "answer": "ER2100路由器的网页登录地址是 http://192.168.1.1。\n\n【图片】\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/H3CER2100企业级路由器用户手册-6W104-整本手册/101b5c36bc9f1aa0e3662749dc750ca51801706d4cb13c9293802b0e5721d90f.jpg",
+      "retrieval_hit": true,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索命中）",
+      "latency_ms": 52593,
+      "chunk_count": 5
+    },
+    {
+      "id": "L3-02",
+      "level": "L3",
+      "question": "集中器恢复出厂以后会怎么样",
+      "expect_refusal": false,
+      "answer": "恢复出厂配置后，当前的配置将会丢失。集中器将自动重新启动，网络通信将暂时中断。  \n当选择“恢复配置，但保留管理 IP”按钮时，可以继续使用当前的 IP 地址重新登录集中器进行设置和管理；当选择“恢复缺省配置”按钮时，则需要使用缺省的 IP 地址（192.168.0.241）重新登录集中器进行设置和管理。\n\n【图片】\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/AolynkCC系列室内型Cable网络集中器用户手册-6W202-整本手册/c159c30df8625a042e9aee6d2807bbce10cc36410bf059175d53b6a91f7b7d53.jpg",
+      "retrieval_hit": null,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索未命中期望章节）",
+      "latency_ms": 53285,
+      "chunk_count": 5
+    },
+    {
+      "id": "L3-03",
+      "level": "L3",
+      "question": "万用表测电压有什么安全注意事项",
+      "expect_refusal": false,
+      "answer": "使用万用表测量电压时，需遵守以下安全注意事项：\n\n1. 请勿将输入的测量值超出仪表所允许的量程范围。交/直流电压的最大输入为600V，200mV量程下为200Vrms。\n\n2. 在测量高压电路时，必须严格注意个人及设备的安全防护措施。\n\n3. 若负极端口（COM）电压超出500V以上接地电压，请勿进行电压测试。\n\n4. 请勿连接到500VAC或VDC的电路上，该操作可能造成危险或损坏仪表。\n\n5. 严禁在正打开或关闭电源时进行电压测量，瞬间的强大电压可能损坏仪表。\n\n6. 进行交流电压测量时，若表笔长度不够，可能导致无法接触带电部位而读数为0，应检查表笔是否接触到插座内的金属接口。\n\n7. 测量前应确保仪表的电池盖和保险丝盖已装好并拧紧螺丝，否则不得使用仪表。\n\n8. 为防止触电，在打开电池后盖、更换电池或保险丝前，必须关闭电源并取下表笔。\n\n9. 仪表具有双绝缘保护，但操作时仍需避免接触可能存在的危险电压端口。\n\n【图片】\n<http://127.0.0.1:9000/knowledge-base-files/upload-images/万用表RS-12的使用/2ec4f0e7e8b",
+      "retrieval_hit": true,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索命中）",
+      "latency_ms": 55310,
+      "chunk_count": 5
+    },
+    {
+      "id": "L3-04",
+      "level": "L3",
+      "question": "烫金机能不能用延长线",
+      "expect_refusal": false,
+      "answer": "不能使用延长线。Brother强烈建议您不要使用任何类型的延长线。",
+      "retrieval_hit": null,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索未命中期望章节）",
+      "latency_ms": 24966,
+      "chunk_count": 5
+    },
+    {
+      "id": "L4-01",
+      "level": "L4",
+      "question": "CB304n 网桥在哪个菜单里恢复出厂设置",
+      "expect_refusal": false,
+      "answer": "CB304n 网桥恢复出厂设置的菜单路径为：管理→设备管理→恢复出厂设置。",
+      "retrieval_hit": true,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索命中）",
+      "latency_ms": 50361,
+      "chunk_count": 5
+    },
+    {
+      "id": "L4-02",
+      "level": "L4",
+      "question": "怎么确认电脑和 CC 系列集中器之间网络通不通",
+      "expect_refusal": false,
+      "answer": "使用 Ping 命令确认管理计算机和集中器之间的网络是否连通。  \n在管理计算机上运行命令提示符，输入 `ping 192.168.0.241`（集中器的缺省IP地址），若返回正常响应，则表示网络连通；否则需检查线缆连接、IP地址配置及代理服务器设置。\n\n【图片】\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/AolynkCC系列室内型Cable网络集中器用户手册-6W202-整本手册/90f6622eacdb0f6cffc6e83e43d8d030311fe8fa17e0bf616bc4634842c1d96a.jpg",
+      "retrieval_hit": true,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索命中）",
+      "latency_ms": 52028,
+      "chunk_count": 5
+    },
+    {
+      "id": "L4-03",
+      "level": "L4",
+      "question": "给电脑设静态 IP 时，CB304n 的子网掩码要填什么",
+      "expect_refusal": false,
+      "answer": "当给电脑设置静态IP地址时，需将计算机的IP地址与CB304n的IP地址设置在同一子网中，CB304n缺省IP地址为192.168.1.1，子网掩码为255.255.255.0。\n\n【图片】\n<http://127.0.0.1:9000/knowledge-base-files/upload-images/AolynkCB304nCable网桥用户手册-5W100-整本手册/48d87533fbf74ee1f6302f06d28cbd27bfe2d3463eba718b20d1882244458979.jpg>",
+      "retrieval_hit": true,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索命中）",
+      "latency_ms": 50715,
+      "chunk_count": 5
+    },
+    {
+      "id": "L4-04",
+      "level": "L4",
+      "question": "ER2100 恢复出厂设置后哪些配置会丢失",
+      "expect_refusal": false,
+      "answer": "恢复出厂设置后，当前的所有设置都将丢失，包括但不限于系统时间、网络配置、虚拟服务器设置、UPnP设置、用户管理信息以及所有通过网页界面或命令行配置的参数。  \n根据手册内容，恢复出厂设置后，路由器将自动重启，并且所有自定义配置将被清除，设备回到初始状态。\n\n【图片】\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/H3CER2100企业级路由器用户手册-6W104-整本手册/8d66723321f7772bf2a499b5717a0b0fd1ea24999a5bbd36dd63250f150f97f9.jpg",
+      "retrieval_hit": null,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索未命中期望章节）",
+      "latency_ms": 50927,
+      "chunk_count": 5
+    },
+    {
+      "id": "L5-01",
+      "level": "L5",
+      "question": "知识库里都有哪些设备的手册",
+      "expect_refusal": false,
+      "answer": "知识库中包含以下设备的手册：\n\n1. AolynkCC系列室内型Cable网络集中器\n2. AolynkCB304nCable网桥\n3. H3C LA2608 室内无线网关\n4. H3C MSR-XS 系列路由器\n5. H3C ER2100 企业级路由器\n\n【图片】\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/AolynkCB304nCable网桥用户手册-5W100-整本手册/ffc7a1f5cc2a626f0dc81584ff6574498e720180f4033133f46c73d54dfb0b80.jpg\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/H3CLA2608室内无线网关用户手册-6W100-整本手册/c34cba3ee9e2d6950206b64a058b6a9d1ad7ee4514f7a4195c562d62d941d71f.jpg",
+      "retrieval_hit": null,
+      "keyword_ratio": null,
+      "passed": true,
+      "reason": "通过",
+      "latency_ms": 50478,
+      "chunk_count": 5
+    },
+    {
+      "id": "L5-02",
+      "level": "L5",
+      "question": "H3C 的路由器缺省用户名密码都是 admin 吗",
+      "expect_refusal": false,
+      "answer": "根据参考内容，H3C MER系列路由器的缺省用户名和密码并非统一为admin。\n\n在【片段1】中提到，用户管理页面显示“admin”用户信息，但未说明这是缺省账户。在【片段2】中，添加管理账户时需手动输入用户名，且默认账户角色为Administrator，但未提及默认用户名为admin。\n\n因此，手册中仅显示存在名为“admin”的用户账户，但未明确该账户为系统缺省账户或其密码是否为admin。无法确认缺省用户名和密码是否均为admin。\n\n【图片】\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/H3CMER系列路由器用户手册-R0821-6W105-整本手册/f0ce738c08c8b5e4c1d51f462de5295d7d3ec096352687e865fb661280c479d3.jpg",
+      "retrieval_hit": null,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索未命中期望章节）",
+      "latency_ms": 50363,
+      "chunk_count": 5
+    },
+    {
+      "id": "L6-01",
+      "level": "L6",
+      "question": "ER2100 的 Web 登录界面长什么样",
+      "expect_refusal": false,
+      "answer": "ER2100的Web登录界面如图3-1所示，显示有用户名、密码及验证码输入框，缺省账号密码均为admin，验证码为W4K7。该界面位于浏览器地址栏输入“http://192.168.1.1”后跳转至的页面。\n\n【图片】\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/H3CER2100企业级路由器用户手册-6W104-整本手册/101b5c36bc9f1aa0e3662749dc750ca51801706d4cb13c9293802b0e5721d90f.jpg",
+      "retrieval_hit": true,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索命中）",
+      "latency_ms": 50398,
+      "chunk_count": 5
+    },
+    {
+      "id": "L6-02",
+      "level": "L6",
+      "question": "万用表上的警告标识是什么意思",
+      "expect_refusal": false,
+      "answer": "万用表上的警告标识含义如下：\n\n- “WARNING”标识表示此处可能出现危险电压，请避开以免导致死亡或严重伤害。\n- “CAUTION”标识表示此处可能出现危险电压，请避开以免导致仪表的损坏。\n- 图片中的三角形内含感叹号标识表明此操作须参照说明书进行。\n- 万用表输入端最大电压警告标识提示禁止接入500VAC或VDC电路，以防止危险和仪表损坏。\n- 高压危险警示标志（黑色闪电符号）表明端口可能存在危险电压，禁止连接500VAC/VDC电路。\n- 双绝缘保护标识说明该设备具备双绝缘保护。\n\n【图片】\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/万用表RS-12的使用/2ec4f0e7e8b05c73503dc25db1ad0e65b99a06b2dea8d8a9525a1865c75095e0.jpg\nhttp://127.0.0.1:9000/knowledge-base-files/upload-images/万用表RS-12的使用/87ccf38edca64aa36a803d7091a6385340dace2",
+      "retrieval_hit": true,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索命中）",
+      "latency_ms": 53164,
+      "chunk_count": 5
+    },
+    {
+      "id": "L7-01",
+      "level": "L7",
+      "question": "小米路由器怎么设置",
+      "expect_refusal": true,
+      "answer": "手册中未涉及小米路由器的设置方法。",
+      "retrieval_hit": null,
+      "keyword_ratio": null,
+      "passed": true,
+      "reason": "正确拒答",
+      "latency_ms": 47608,
+      "chunk_count": 5
+    },
+    {
+      "id": "L7-02",
+      "level": "L7",
+      "question": "ER2100 路由器卖多少钱",
+      "expect_refusal": true,
+      "answer": "手册未涉及ER2100路由器的售价信息。",
+      "retrieval_hit": null,
+      "keyword_ratio": null,
+      "passed": true,
+      "reason": "正确拒答",
+      "latency_ms": 48927,
+      "chunk_count": 5
+    },
+    {
+      "id": "L7-03",
+      "level": "L7",
+      "question": "NR-1200W 的无线吞吐量实测能跑到多少 Mbps",
+      "expect_refusal": false,
+      "answer": "手册中未提供NR-1200W无线吞吐量的实测数据。\n\n手册中仅提及该设备的无线传输速率为1200Mbps，此为标称速率，基于802.11ac/a/n标准在理想条件下的理论最大值，实际吞吐量会受环境干扰、客户端能力、信道占用率等因素影响，无法达到标称值。",
+      "retrieval_hit": null,
+      "keyword_ratio": 1.0,
+      "passed": true,
+      "reason": "通过（关键事实 100%，检索未命中期望章节）",
+      "latency_ms": 51112,
+      "chunk_count": 5
+    },
+    {
+      "id": "L7-04",
+      "level": "L7",
+      "question": "这些路由器的保修期是几年",
+      "expect_refusal": true,
+      "answer": "手册中未提及这些路由器的保修期信息。",
+      "retrieval_hit": null,
+      "keyword_ratio": null,
+      "passed": true,
+      "reason": "正确拒答",
+      "latency_ms": 45887,
+      "chunk_count": 5
+    }
+  ]
+}
