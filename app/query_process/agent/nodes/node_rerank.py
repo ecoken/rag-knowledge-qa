@@ -21,7 +21,7 @@
 import sys
 
 from app.core.logger import logger
-from app.lm.reranker_utils import get_reranker_model
+from app.lm.reranker_utils import rerank_scores
 from app.query_process.agent.state import QueryGraphState
 from app.utils.task_utils import add_done_task, add_running_task
 
@@ -47,14 +47,12 @@ def node_rerank(state: QueryGraphState) -> QueryGraphState:
             return state
 
         query_text = state.get("rewritten_query") or state.get("query") or ""
-        model = get_reranker_model()
 
-        # 交叉编码器输入格式：[[查询, 文档], ...]，一次性批量打分
+        # 交叉编码器输入格式：[[查询, 文档], ...]，一次性批量打分。
+        # 走 rerank_scores 而非直接调模型：推理需要串行化，
+        # 多线程并发调用同一个 FP16 模型实例会抛 dtype 错误。
         pairs = [[query_text, c.get("content", "")] for c in candidates]
-        scores = model.compute_score(pairs, normalize=True)
-        # 单条候选时部分版本返回标量而非列表，统一成列表处理
-        if not isinstance(scores, list):
-            scores = [scores]
+        scores = rerank_scores(pairs, normalize=True)
 
         scored = []
         for chunk, score in zip(candidates, scores):
