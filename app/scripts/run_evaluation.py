@@ -37,10 +37,14 @@ from app.utils.path_util import PROJECT_ROOT
 KEYWORD_PASS_RATIO = 0.6
 
 # 判定「模型在拒答」的特征词。除了系统内置的固定话术，
-# 模型自己组织的拒答措辞也要能识别出来。
+# 模型自己组织的拒答措辞也要能识别出来——它的表达方式比想象中多。
+# 实测中「参考内容中并未包含关于小米路由器的设置说明」这句标准拒答
+# 曾因为词表里没有「并未包含」而被判为失败，是典型的判定器漏网。
 REFUSAL_MARKERS = (
     "没有检索到", "无法作答", "未提及", "没有提到", "手册中未", "无相关",
-    "抱歉", "不包含", "未找到", "没有找到", "无法回答",
+    "抱歉", "不包含", "未包含", "并未包含", "并未提供", "未提供",
+    "未找到", "没有找到", "无法回答", "没有相关", "未涉及", "不涉及",
+    "无法提供", "缺少相关",
 )
 
 
@@ -143,7 +147,15 @@ async def evaluate_one(case: dict, semaphore: asyncio.Semaphore) -> dict:
         if violated:
             record["reason"] = f"出现禁用表述（疑似答反）：{violated}"
             return record
-        if is_refusal(answer):
+
+        # 拒答判定只在答案不含任何关键事实时才生效。
+        #
+        # 「先说明手册里没有 X，再给出相关的 Y」是一种正确且常见的回答模式，
+        # 例如问实测吞吐量时答「手册未提供实测数据，仅说明标称速率为 1200Mbps」——
+        # 开头命中了拒答特征词，实质上却给出了该给的信息。
+        # 早先的顺序是先判拒答再比关键词，这类回答连关键词比对都走不到，
+        # 直接被记成「本应能答出却拒答了」。
+        if is_refusal(answer) and not (ratio and ratio > 0):
             record["reason"] = "本应能答出却拒答了，检查检索是否召回为空"
             return record
         if ratio is not None and ratio < KEYWORD_PASS_RATIO:

@@ -1,9 +1,21 @@
+import threading
+
 from pymilvus.model.hybrid import BGEM3EmbeddingFunction
 from app.core.logger import logger
 from app.conf.embedding_config import embedding_config
 
 # 模型单例对象，避免重复初始化
 _bge_m3_ef = None
+# 保护单例初始化的锁。
+#
+# 不加锁的单例在并发下会出严重问题：两个线程同时判空、同时开始加载模型，
+# BGE-M3 采用 meta 设备做延迟初始化，一个线程会读到另一个线程尚未完成
+# to(device) 的半成品，抛出
+#   Cannot copy out of meta tensor; no data!
+# 而且这个错误只在并发时出现，单线程测试完全正常——实测单并发 6/6 通过，
+# 并发 2 时向量生成连续失败几十次，几乎整套评测归零。
+_bge_m3_lock = threading.Lock()
+
 
 def get_bge_m3_ef():
     """
@@ -11,10 +23,21 @@ def get_bge_m3_ef():
     :return: 初始化完成的BGEM3EmbeddingFunction实例
     """
     global _bge_m3_ef
-    # 单例模式：已初始化则直接返回，避免重复加载模型
+    # 第一次检查：已初始化则直接返回，避免每次调用都去抢锁
     if _bge_m3_ef is not None:
         logger.debug("BGE-M3模型单例已存在，直接返回实例")
         return _bge_m3_ef
+
+    with _bge_m3_lock:
+        # 第二次检查：等锁期间可能已被其他线程完成初始化
+        if _bge_m3_ef is not None:
+            return _bge_m3_ef
+        return _init_bge_m3_ef()
+
+
+def _init_bge_m3_ef():
+    """实际执行模型加载。调用方必须已持有 _bge_m3_lock。"""
+    global _bge_m3_ef
 
     # 从环境变量加载配置，无配置则使用默认值
     # 本地有可以使用本地地址！ 没有使用 "BAAI/bge-m3" 会自动下载！ 如果云端部署也可以使用url地址！

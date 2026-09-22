@@ -23,6 +23,7 @@ from langchain_core.messages import HumanMessage
 from app.core.load_prompt import load_prompt
 from app.core.logger import logger
 from app.lm.llm_utils import get_llm_client
+from app.query_process.agent.nodes._retrieval import resolve_item_names
 from app.query_process.agent.state import QueryGraphState
 from app.utils.task_utils import add_done_task, add_running_task
 
@@ -84,12 +85,17 @@ def node_item_name_confirm(state: QueryGraphState) -> QueryGraphState:
         response = llm.invoke([HumanMessage(content=prompt)])
         item_names, rewritten = _parse_response(response.content)
 
+        # 把模型识别出的口语商品名映射成库中的规范名。
+        # 不做这一步，标量过滤会因为字符串对不上而过滤掉全部结果。
+        canonical = resolve_item_names(item_names)
+
         # 改写失败时退回原问题：宁可少一层增强，也不能把空串送进检索
-        state["item_names"] = item_names
+        state["item_names"] = canonical
         state["rewritten_query"] = rewritten or query
 
         logger.success(
-            f"[{function_name}] 商品识别：{item_names or '（未识别，将全库检索）'}；"
+            f"[{function_name}] 商品识别：{item_names or '（未识别）'} "
+            f"→ 规范名 {canonical or '（未匹配，将全库检索）'}；"
             f"改写后问题：{state['rewritten_query']}"
         )
 
