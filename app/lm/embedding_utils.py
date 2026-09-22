@@ -15,6 +15,9 @@ _bge_m3_ef = None
 # 而且这个错误只在并发时出现，单线程测试完全正常——实测单并发 6/6 通过，
 # 并发 2 时向量生成连续失败几十次，几乎整套评测归零。
 _bge_m3_lock = threading.Lock()
+# 保护推理调用的锁。与上面的初始化锁分开：初始化只发生一次，
+# 推理则每次调用都要走，用同一把锁会让首次加载期间的等待语义变得含糊。
+_bge_m3_infer_lock = threading.Lock()
 
 
 def get_bge_m3_ef():
@@ -87,8 +90,19 @@ def generate_embeddings(texts):
     try:
         # 加载BGE-M3模型单例
         model = get_bge_m3_ef()
-        # 模型编码生成向量，返回dense（稠密向量）+sparse（CSR格式稀疏向量）
-        embeddings = model.encode_documents(texts)
+        # 推理本身也要串行化，不只是初始化。
+        #
+        # 单例锁只保证了"模型被加载一次"，但多个线程仍会并发调用同一个模型实例。
+        # 在 GPU + FP16 下这会抛 "expected scalar type Half but found Float"：
+        # 半精度推理过程中存在临时的 dtype 转换，两个线程的中间态互相污染。
+        # CPU + FP32 时类型宽容得多，同样的代码不会报错——又一个只在特定
+        # 设备与并发组合下才暴露的问题。
+        #
+        # 串行化的代价很小：GPU 上单次编码约 100ms，而其余环节（LLM 调用）
+        # 本就是秒级，推理不是吞吐瓶颈。
+        with _bge_m3_infer_lock:
+            # 模型编码生成向量，返回dense（稠密向量）+sparse（CSR格式稀疏向量）
+            embeddings = model.encode_documents(texts)
         logger.debug(f"模型编码完成，开始解析稀疏向量格式，共{len(texts)}条")
 
         # 初始化稀疏向量处理结果，解析为字典格式（适配序列化/存储）
